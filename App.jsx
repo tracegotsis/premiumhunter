@@ -62,6 +62,35 @@ const UNIVERSE = [
   { t: "INTC", n: "Intel", etf: false, p: 27.4, chg: -0.7, iv: 48, hv: 41, ivr: 51, earn: "Oct 23", ed: 79 },
   { t: "CCL", n: "Carnival", etf: false, p: 30.2, chg: 2.0, iv: 46, hv: 39, ivr: 50, earn: "Sep 29", ed: 55 },
   { t: "AAL", n: "American Airlines", etf: false, p: 14.8, chg: -0.8, iv: 50, hv: 45, ivr: 48, earn: "Oct 23", ed: 79 },
+  // ── Energy: refiners
+  { t: "VLO", n: "Valero Energy", etf: false, p: 168.4, chg: -1.8, iv: 32, hv: 28, ivr: 54, earn: "Oct 22", ed: 78 },
+  { t: "MPC", n: "Marathon Petroleum", etf: false, p: 198.6, chg: -1.6, iv: 30, hv: 26, ivr: 51, earn: "Nov 03", ed: 90 },
+  { t: "PSX", n: "Phillips 66", etf: false, p: 142.8, chg: -1.4, iv: 29, hv: 25, ivr: 49, earn: "Oct 30", ed: 86 },
+  { t: "DINO", n: "HF Sinclair", etf: false, p: 54.2, chg: -2.1, iv: 41, hv: 35, ivr: 58, earn: "Nov 05", ed: 92 },
+  { t: "PBF", n: "PBF Energy", etf: false, p: 32.6, chg: -2.8, iv: 52, hv: 44, ivr: 64, earn: "Oct 29", ed: 85 },
+  // ── Energy: E&P / producers
+  { t: "COP", n: "ConocoPhillips", etf: false, p: 108.4, chg: -1.9, iv: 27, hv: 24, ivr: 47, earn: "Nov 05", ed: 92 },
+  { t: "EOG", n: "EOG Resources", etf: false, p: 132.6, chg: -1.7, iv: 28, hv: 24, ivr: 48, earn: "Nov 05", ed: 92 },
+  { t: "DVN", n: "Devon Energy", etf: false, p: 36.8, chg: -2.4, iv: 38, hv: 32, ivr: 56, earn: "Nov 03", ed: 90 },
+  { t: "FANG", n: "Diamondback Energy", etf: false, p: 154.2, chg: -2.2, iv: 35, hv: 30, ivr: 55, earn: "Nov 03", ed: 90 },
+  { t: "OXY", n: "Occidental Petroleum", etf: false, p: 46.8, chg: -2.6, iv: 36, hv: 31, ivr: 57, earn: "Nov 10", ed: 97 },
+  { t: "PR", n: "Permian Resources", etf: false, p: 14.9, chg: -2.9, iv: 44, hv: 38, ivr: 60, earn: "Nov 04", ed: 91 },
+  { t: "APA", n: "APA Corporation", etf: false, p: 24.6, chg: -3.1, iv: 46, hv: 40, ivr: 62, earn: "Nov 04", ed: 91 },
+  { t: "CTRA", n: "Coterra Energy", etf: false, p: 26.4, chg: -1.5, iv: 34, hv: 29, ivr: 52, earn: "Nov 02", ed: 89 },
+  // ── Energy: midstream & services
+  { t: "OKE", n: "ONEOK", etf: false, p: 86.2, chg: -0.9, iv: 26, hv: 22, ivr: 44, earn: "Oct 27", ed: 83 },
+  { t: "WMB", n: "Williams Companies", etf: false, p: 62.4, chg: -0.6, iv: 24, hv: 20, ivr: 41, earn: "Nov 02", ed: 89 },
+  { t: "KMI", n: "Kinder Morgan", etf: false, p: 30.8, chg: -0.7, iv: 23, hv: 19, ivr: 39, earn: "Oct 21", ed: 77 },
+  { t: "TRGP", n: "Targa Resources", etf: false, p: 178.6, chg: -1.2, iv: 31, hv: 27, ivr: 50, earn: "Nov 05", ed: 92 },
+  { t: "LNG", n: "Cheniere Energy", etf: false, p: 246.8, chg: -0.8, iv: 28, hv: 24, ivr: 45, earn: "Oct 30", ed: 86 },
+  { t: "SLB", n: "SLB (Schlumberger)", etf: false, p: 42.6, chg: -2.3, iv: 33, hv: 29, ivr: 53, earn: "Oct 16", ed: 72 },
+  { t: "HAL", n: "Halliburton", etf: false, p: 28.4, chg: -2.7, iv: 37, hv: 32, ivr: 56, earn: "Oct 20", ed: 76 },
+  { t: "BKR", n: "Baker Hughes", etf: false, p: 48.2, chg: -1.4, iv: 30, hv: 26, ivr: 47, earn: "Oct 21", ed: 77 },
+  // ── Energy ETFs
+  { t: "BNO", n: "Brent Oil Fund", etf: true, p: 32.4, chg: -3.6, iv: 36, hv: 30, ivr: 68, earn: null, ed: null },
+  { t: "XOP", n: "Oil & Gas Explor. ETF", etf: true, p: 148.6, chg: -2.5, iv: 34, hv: 29, ivr: 61, earn: null, ed: null },
+  { t: "OIH", n: "Oil Services ETF", etf: true, p: 286.4, chg: -2.8, iv: 38, hv: 33, ivr: 63, earn: null, ed: null },
+  { t: "UNG", n: "Natural Gas Fund", etf: true, p: 18.6, chg: 2.4, iv: 62, hv: 55, ivr: 72, earn: null, ed: null },
   // ── ETFs
   { t: "SPY", n: "S&P 500 ETF", etf: true, p: 771.5, chg: 0.6, iv: 13, hv: 11, ivr: 21, earn: null, ed: null },
   { t: "QQQ", n: "Nasdaq 100 ETF", etf: true, p: 723.9, chg: 1.2, iv: 17, hv: 14, ivr: 26, earn: null, ed: null },
@@ -105,6 +134,11 @@ const TICKER_SECTOR = {
   AMZN: "XLY", TSLA: "XLY", NKE: "XLY", MCD: "XLY", F: "XLY", RIVN: "XLY", CCL: "XLY", DKNG: "XLY", GME: "XLY",
   JPM: "XLF", BAC: "XLF", COIN: "XLF", HOOD: "XLF", SOFI: "XLF", PYPL: "XLF", XLF: "XLF",
   XOM: "XLE", CVX: "XLE", USO: "XLE", XLE: "XLE",
+  VLO: "XLE", MPC: "XLE", PSX: "XLE", DINO: "XLE", PBF: "XLE",
+  COP: "XLE", EOG: "XLE", DVN: "XLE", FANG: "XLE", OXY: "XLE", PR: "XLE",
+  APA: "XLE", CTRA: "XLE", OKE: "XLE", WMB: "XLE", KMI: "XLE", TRGP: "XLE",
+  LNG: "XLE", SLB: "XLE", HAL: "XLE", BKR: "XLE",
+  BNO: "XLE", XOP: "XLE", OIH: "XLE", UNG: "XLE",
   WMT: "XLP", KO: "XLP",
   PFE: "XLV", HIMS: "XLV",
 };
@@ -127,6 +161,11 @@ const TICKER_LIQ = {
   IONQ: 2, RDDT: 2, HIMS: 2, ASTS: 2, XOM: 2, CVX: 2, JPM: 2, WMT: 2, KO: 2,
   MCD: 2, DIS: 2, BA: 2, NKE: 2, PYPL: 2, PFE: 2, CCL: 2, AAL: 2, ROKU: 2,
   LUNR: 1,
+  // Energy: majors & big E&P names carry deep option markets; small refiners are thinner
+  OXY: 3, SLB: 3, COP: 3, DVN: 3, HAL: 3, EOG: 3, KMI: 3, FANG: 3, XOP: 3,
+  VLO: 2, MPC: 2, OKE: 2, PSX: 2, WMB: 2, LNG: 2, BKR: 2, APA: 2, CTRA: 2,
+  TRGP: 2, PR: 2, PBF: 2, OIH: 2, UNG: 2, BNO: 2,
+  DINO: 1,
 };
 const liq = (t) => TICKER_LIQ[t] || 2;
 const LIQ_LABEL = { 3: "ELITE", 2: "GOOD", 1: "THIN" };
@@ -145,6 +184,15 @@ function expectedMove(price, iv, days) {
 
 function getStrategies(s) {
   const e = earningsSoon(s);
+  // IV meaningfully BELOW realized vol: options are cheap relative to actual movement.
+  // Selling premium here has no vol edge regardless of what IV rank says.
+  if (s.iv != null && s.hv != null && s.iv - s.hv <= -5) {
+    return [
+      { name: "Long Straddle / Strangle", tag: "vol underpriced vs realized", setup: "ATM or ~30Δ · 45+ DTE" },
+      { name: "Calendar Spread", tag: "long vega · IV expansion", setup: "ATM · sell 30 / buy 60 DTE" },
+      { name: "Debit Spread (directional)", tag: "defined risk · cheap premium", setup: "buy ~60Δ sell ~40Δ · 45 DTE" },
+    ];
+  }
   if (s.ivr >= 70) {
     return [
       { name: "Short Strangle", tag: e ? "IV crush play" : "premium selling", setup: "~16Δ shorts · 30–45 DTE" },
@@ -431,16 +479,34 @@ function StockCard({ s, watched, onStar, onSector, onVol, volLoading }) {
           </span>
         </div>
         <IVMeter ivr={s.ivr} />
+        {!s.ivLive && (
+          <div style={{ fontSize: 9.5, color: "#C77E14", marginTop: 5, fontWeight: 700, letterSpacing: "0.05em" }}>
+            {volLoading ? "LOADING LIVE VOL…" : "⚠ SNAPSHOT VOL — tap ↻ for live IV/HV"}
+          </div>
+        )}
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginTop: 7, fontFamily: "'IBM Plex Mono', monospace" }}>
           <span style={{ fontSize: 11, color: "#5B6472" }}>
             IV <span style={{ fontWeight: 700, color: "#22282F" }}>{s.iv}%</span>
             <span style={{ color: "#B5B0A3", margin: "0 5px" }}>·</span>
             HV <span style={{ fontWeight: 700, color: "#22282F" }}>{s.hv}%</span>
-            {s.iv > s.hv && (
-              <span style={{ fontSize: 9, fontWeight: 700, letterSpacing: "0.06em", color: "#1E7A46", marginLeft: 6 }}>
-                +{s.iv - s.hv} RICH
-              </span>
-            )}
+            {(() => {
+              const gap = s.iv - s.hv;
+              if (gap >= 5) return (
+                <span title="IV above realized vol — options priced richer than actual movement. Premium-selling edge." style={{ fontSize: 9, fontWeight: 700, letterSpacing: "0.06em", color: "#1E7A46", marginLeft: 6 }}>
+                  +{gap} RICH
+                </span>
+              );
+              if (gap <= -5) return (
+                <span title="IV BELOW realized vol — options priced cheaper than the stock is actually moving. Do NOT sell premium here; favors buying vol." style={{ fontSize: 9, fontWeight: 700, letterSpacing: "0.06em", color: "#2E6DA4", marginLeft: 6 }}>
+                  {gap} CHEAP
+                </span>
+              );
+              return (
+                <span title="IV roughly equals realized vol — no meaningful vol edge either way." style={{ fontSize: 9, fontWeight: 700, letterSpacing: "0.06em", color: "#8A8578", marginLeft: 6 }}>
+                  FAIR
+                </span>
+              );
+            })()}
           </span>
           <span style={{ fontSize: 10.5, color: "#8A8578" }}>
             {s.etf ? "NO EARNINGS (ETF)" : `NEXT ER ${s.earn.toUpperCase()} (${s.ed}D)`}
@@ -523,6 +589,27 @@ export default function OptionsScanner() {
       .catch(() => setLive(false));
   }, []);
 
+  // Auto-load real IV/HV for every ticker, paced to stay under Tradier's ~60 req/min
+  // (each vol call ≈ 4 requests, so ~5s spacing keeps us safe). Cards show live vol
+  // rather than stale teaching values sitting next to a live price.
+  useEffect(() => {
+    if (live !== true) return;
+    let i = 0, cancelled = false;
+    const queue = UNIVERSE.map((u) => u.t);
+    const tick = () => {
+      if (cancelled || i >= queue.length) return;
+      const t = queue[i++];
+      setVol((v) => (v[t] ? v : { ...v, [t]: { loading: true } }));
+      fetch(`/api/vol?symbol=${t}`)
+        .then((r) => r.json())
+        .then((d) => setVol((v) => ({ ...v, [t]: d && !d.error ? d : { err: true } })))
+        .catch(() => setVol((v) => ({ ...v, [t]: { err: true } })));
+    };
+    tick();
+    const id = setInterval(tick, 5000);
+    return () => { cancelled = true; clearInterval(id); };
+  }, [live]);
+
   const refreshVol = (t) => {
     setVol((v) => ({ ...v, [t]: { ...(v[t] || {}), loading: true } }));
     fetch(`/api/vol?symbol=${t}`)
@@ -560,20 +647,28 @@ export default function OptionsScanner() {
     const merged = UNIVERSE.map((u) => {
       const q = quotes[u.t];
       const v = vol[u.t];
+      if (!v || !v.iv) {
+        return { ...u, ...(q && q.p != null ? { p: q.p, chg: q.chg != null ? q.chg : u.chg } : {}) };
+      }
+      const ivL = Math.round(v.iv);
+      const hvL = v.hv ? Math.round(v.hv) : u.hv;
+      // Real rank once history exists; otherwise estimate from the IV/HV relationship.
+      // IV well above HV → vol is bid up → high rank. IV below HV → options are cheap → low rank.
+      let rank = v.ivr;
+      if (rank == null && hvL > 0) {
+        const ratio = ivL / hvL;
+        rank = Math.max(0, Math.min(100, Math.round((ratio - 0.7) * 125)));
+      }
       return {
         ...u,
         ...(q && q.p != null ? { p: q.p, chg: q.chg != null ? q.chg : u.chg } : {}),
-        ...(v && v.iv
-          ? {
-              iv: Math.round(v.iv),
-              hv: v.hv ? Math.round(v.hv) : u.hv,
-              ivr: v.ivr != null ? v.ivr : u.ivr,
-              ivLive: true,
-              ivrReal: v.ivr != null,
-              liveLiq: v.liqTier || null,
-              dte: v.dte,
-            }
-          : {}),
+        iv: ivL,
+        hv: hvL,
+        ivr: rank != null ? rank : u.ivr,
+        ivLive: true,
+        ivrReal: v.ivr != null,
+        liveLiq: v.liqTier || null,
+        dte: v.dte,
       };
     });
     let list = merged.filter((s) => {
