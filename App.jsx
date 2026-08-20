@@ -145,15 +145,6 @@ function expectedMove(price, iv, days) {
 
 function getStrategies(s) {
   const e = earningsSoon(s);
-  // IV meaningfully BELOW realized vol: options are cheap relative to actual movement.
-  // Selling premium here has no vol edge regardless of what IV rank says.
-  if (s.iv != null && s.hv != null && s.iv - s.hv <= -5) {
-    return [
-      { name: "Long Straddle / Strangle", tag: "vol underpriced vs realized", setup: "ATM or ~30Δ · 45+ DTE" },
-      { name: "Calendar Spread", tag: "long vega · IV expansion", setup: "ATM · sell 30 / buy 60 DTE" },
-      { name: "Debit Spread (directional)", tag: "defined risk · cheap premium", setup: "buy ~60Δ sell ~40Δ · 45 DTE" },
-    ];
-  }
   if (s.ivr >= 70) {
     return [
       { name: "Short Strangle", tag: e ? "IV crush play" : "premium selling", setup: "~16Δ shorts · 30–45 DTE" },
@@ -440,34 +431,16 @@ function StockCard({ s, watched, onStar, onSector, onVol, volLoading }) {
           </span>
         </div>
         <IVMeter ivr={s.ivr} />
-        {!s.ivLive && (
-          <div style={{ fontSize: 9.5, color: "#C77E14", marginTop: 5, fontWeight: 700, letterSpacing: "0.05em" }}>
-            {volLoading ? "LOADING LIVE VOL…" : "⚠ SNAPSHOT VOL — tap ↻ for live IV/HV"}
-          </div>
-        )}
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginTop: 7, fontFamily: "'IBM Plex Mono', monospace" }}>
           <span style={{ fontSize: 11, color: "#5B6472" }}>
             IV <span style={{ fontWeight: 700, color: "#22282F" }}>{s.iv}%</span>
             <span style={{ color: "#B5B0A3", margin: "0 5px" }}>·</span>
             HV <span style={{ fontWeight: 700, color: "#22282F" }}>{s.hv}%</span>
-            {(() => {
-              const gap = s.iv - s.hv;
-              if (gap >= 5) return (
-                <span title="IV above realized vol — options priced richer than actual movement. Premium-selling edge." style={{ fontSize: 9, fontWeight: 700, letterSpacing: "0.06em", color: "#1E7A46", marginLeft: 6 }}>
-                  +{gap} RICH
-                </span>
-              );
-              if (gap <= -5) return (
-                <span title="IV BELOW realized vol — options priced cheaper than the stock is actually moving. Do NOT sell premium here; favors buying vol." style={{ fontSize: 9, fontWeight: 700, letterSpacing: "0.06em", color: "#2E6DA4", marginLeft: 6 }}>
-                  {gap} CHEAP
-                </span>
-              );
-              return (
-                <span title="IV roughly equals realized vol — no meaningful vol edge either way." style={{ fontSize: 9, fontWeight: 700, letterSpacing: "0.06em", color: "#8A8578", marginLeft: 6 }}>
-                  FAIR
-                </span>
-              );
-            })()}
+            {s.iv > s.hv && (
+              <span style={{ fontSize: 9, fontWeight: 700, letterSpacing: "0.06em", color: "#1E7A46", marginLeft: 6 }}>
+                +{s.iv - s.hv} RICH
+              </span>
+            )}
           </span>
           <span style={{ fontSize: 10.5, color: "#8A8578" }}>
             {s.etf ? "NO EARNINGS (ETF)" : `NEXT ER ${s.earn.toUpperCase()} (${s.ed}D)`}
@@ -550,27 +523,6 @@ export default function OptionsScanner() {
       .catch(() => setLive(false));
   }, []);
 
-  // Auto-load real IV/HV for every ticker, paced to stay under Tradier's ~60 req/min
-  // (each vol call ≈ 4 requests, so ~5s spacing keeps us safe). Cards show live vol
-  // rather than stale teaching values sitting next to a live price.
-  useEffect(() => {
-    if (live !== true) return;
-    let i = 0, cancelled = false;
-    const queue = UNIVERSE.map((u) => u.t);
-    const tick = () => {
-      if (cancelled || i >= queue.length) return;
-      const t = queue[i++];
-      setVol((v) => (v[t] ? v : { ...v, [t]: { loading: true } }));
-      fetch(`/api/vol?symbol=${t}`)
-        .then((r) => r.json())
-        .then((d) => setVol((v) => ({ ...v, [t]: d && !d.error ? d : { err: true } })))
-        .catch(() => setVol((v) => ({ ...v, [t]: { err: true } })));
-    };
-    tick();
-    const id = setInterval(tick, 5000);
-    return () => { cancelled = true; clearInterval(id); };
-  }, [live]);
-
   const refreshVol = (t) => {
     setVol((v) => ({ ...v, [t]: { ...(v[t] || {}), loading: true } }));
     fetch(`/api/vol?symbol=${t}`)
@@ -608,28 +560,20 @@ export default function OptionsScanner() {
     const merged = UNIVERSE.map((u) => {
       const q = quotes[u.t];
       const v = vol[u.t];
-      if (!v || !v.iv) {
-        return { ...u, ...(q && q.p != null ? { p: q.p, chg: q.chg != null ? q.chg : u.chg } : {}) };
-      }
-      const ivL = Math.round(v.iv);
-      const hvL = v.hv ? Math.round(v.hv) : u.hv;
-      // Real rank once history exists; otherwise estimate from the IV/HV relationship.
-      // IV well above HV → vol is bid up → high rank. IV below HV → options are cheap → low rank.
-      let rank = v.ivr;
-      if (rank == null && hvL > 0) {
-        const ratio = ivL / hvL;
-        rank = Math.max(0, Math.min(100, Math.round((ratio - 0.7) * 125)));
-      }
       return {
         ...u,
         ...(q && q.p != null ? { p: q.p, chg: q.chg != null ? q.chg : u.chg } : {}),
-        iv: ivL,
-        hv: hvL,
-        ivr: rank != null ? rank : u.ivr,
-        ivLive: true,
-        ivrReal: v.ivr != null,
-        liveLiq: v.liqTier || null,
-        dte: v.dte,
+        ...(v && v.iv
+          ? {
+              iv: Math.round(v.iv),
+              hv: v.hv ? Math.round(v.hv) : u.hv,
+              ivr: v.ivr != null ? v.ivr : u.ivr,
+              ivLive: true,
+              ivrReal: v.ivr != null,
+              liveLiq: v.liqTier || null,
+              dte: v.dte,
+            }
+          : {}),
       };
     });
     let list = merged.filter((s) => {

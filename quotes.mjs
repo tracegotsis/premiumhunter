@@ -23,15 +23,9 @@ export default async (req) => {
     const out = {};
     for (const q of list) {
       if (q && q.symbol) {
-        const last = q.last ?? q.close ?? null;
-        // Sandbox often returns change_percentage as 0 — derive it from prevclose instead
-        let chg = q.change_percentage;
-        if ((chg == null || chg === 0) && last != null && q.prevclose) {
-          chg = ((last - q.prevclose) / q.prevclose) * 100;
-        }
         out[q.symbol] = {
-          p: last,
-          chg: chg != null ? Math.round(chg * 100) / 100 : null,
+          p: q.last ?? q.close ?? null,
+          chg: q.change_percentage ?? null,
           vol: q.volume ?? null,
           avgVol: q.average_volume ?? null,
         };
