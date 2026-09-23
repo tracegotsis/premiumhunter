@@ -42,8 +42,15 @@ export default async (req) => {
     const withDte = exps
       .map((d) => ({ d, dte: Math.round((new Date(d) - now) / 86400000) }))
       .filter((x) => x.dte > 5);
-    withDte.sort((a, b) => Math.abs(a.dte - 35) - Math.abs(b.dte - 35));
-    const exp = withDte[0];
+    // Candidate expirations the app maps macro/earnings events onto, so the card can
+    // say WHICH expiry is clean instead of a generic "30–45 DTE".
+    const candidates = withDte
+      .filter((x) => x.dte >= 10 && x.dte <= 80)
+      .sort((a, b) => a.dte - b.dte)
+      .slice(0, 6)
+      .map((x) => ({ d: x.d, dte: x.dte }));
+    const byTarget = [...withDte].sort((a, b) => Math.abs(a.dte - 35) - Math.abs(b.dte - 35));
+    const exp = byTarget[0];
 
     // 3. Chain with greeks -> ATM IV + liquidity stats
     const cj = await tget(`/markets/options/chains?symbol=${symbol}&expiration=${exp.d}&greeks=true`);
@@ -91,8 +98,8 @@ export default async (req) => {
       }
     } catch { /* HV optional */ }
 
-    // 5. IV history in Blobs -> real IV Rank once enough days accumulate
-    let ivr = null, points = 0;
+    // 5. IV history in Blobs -> real IV Rank + IV direction once days accumulate
+    let ivr = null, points = 0, ivTrend = null, iv5d = null, ivRefDays = null;
     try {
       const store = getStore("iv-history");
       const key = symbol;
@@ -109,6 +116,25 @@ export default async (req) => {
         const lo = Math.min(...ivs), hi = Math.max(...ivs);
         if (hi > lo) ivr = Math.round(((iv - lo) / (hi - lo)) * 100);
       }
+
+      // IV DIRECTION — rank alone can't distinguish a spike that just printed from
+      // one that's been bleeding for a week. Those are opposite trades.
+      // Compare today's IV against the stored reading closest to 5 trading days back.
+      if (iv && points >= 3) {
+        const target = new Date(now - 7 * 86400000).toISOString().slice(0, 10);
+        let ref = null, bestGap = Infinity;
+        for (const pt of existing) {
+          if (pt.d >= today) continue;
+          const gap = Math.abs(new Date(pt.d) - new Date(target));
+          if (gap < bestGap) { bestGap = gap; ref = pt; }
+        }
+        if (ref && ref.iv > 0) {
+          iv5d = Math.round((iv - ref.iv) * 10) / 10;
+          ivRefDays = Math.round((new Date(today) - new Date(ref.d)) / 86400000);
+          const pct = (iv - ref.iv) / ref.iv;
+          ivTrend = pct > 0.06 ? "rising" : pct < -0.06 ? "falling" : "flat";
+        }
+      }
     } catch { /* Blobs optional in local dev */ }
 
     return Response.json({
@@ -116,7 +142,9 @@ export default async (req) => {
       iv: iv ? Math.round(iv * 10) / 10 : null,
       hv: hv ? Math.round(hv * 10) / 10 : null,
       ivr, historyDays: points,
+      ivTrend, iv5d, ivRefDays,
       dte: exp.dte, expiration: exp.d,
+      expirations: candidates,
       optVolume: totVol, openInterest: totOI,
       medianSpreadPct: medSpread !== null ? Math.round(medSpread * 1000) / 10 : null,
       liqTier,

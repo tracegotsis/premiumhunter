@@ -7,7 +7,8 @@ const BASE = process.env.TRADIER_BASE || "https://sandbox.tradier.com/v1";
 export default async (req) => {
   try {
     const url = new URL(req.url);
-    const symbols = (url.searchParams.get("symbols") || "").slice(0, 2000);
+    // Client chunks the universe, but keep a generous ceiling so a chunk is never truncated
+    const symbols = (url.searchParams.get("symbols") || "").slice(0, 8000);
     if (!symbols) return Response.json({ error: "symbols required" }, { status: 400 });
 
     const r = await fetch(`${BASE}/markets/quotes?symbols=${encodeURIComponent(symbols)}`, {
