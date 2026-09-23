@@ -7,7 +7,8 @@ const BASE = process.env.TRADIER_BASE || "https://sandbox.tradier.com/v1";
 export default async (req) => {
   try {
     const url = new URL(req.url);
-    const symbols = (url.searchParams.get("symbols") || "").slice(0, 2000);
+    // Client chunks the universe, but keep a generous ceiling so a chunk is never truncated
+    const symbols = (url.searchParams.get("symbols") || "").slice(0, 8000);
     if (!symbols) return Response.json({ error: "symbols required" }, { status: 400 });
 
     const r = await fetch(`${BASE}/markets/quotes?symbols=${encodeURIComponent(symbols)}`, {
@@ -23,9 +24,15 @@ export default async (req) => {
     const out = {};
     for (const q of list) {
       if (q && q.symbol) {
+        const last = q.last ?? q.close ?? null;
+        // Sandbox often returns change_percentage as 0 — derive it from prevclose instead
+        let chg = q.change_percentage;
+        if ((chg == null || chg === 0) && last != null && q.prevclose) {
+          chg = ((last - q.prevclose) / q.prevclose) * 100;
+        }
         out[q.symbol] = {
-          p: q.last ?? q.close ?? null,
-          chg: q.change_percentage ?? null,
+          p: last,
+          chg: chg != null ? Math.round(chg * 100) / 100 : null,
           vol: q.volume ?? null,
           avgVol: q.average_volume ?? null,
         };
